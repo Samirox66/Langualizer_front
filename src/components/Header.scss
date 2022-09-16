@@ -1,0 +1,11 @@
+.header {
+  width: 100%;
+  background-color: azure;
+  height: 50px;
+
+  &__list {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
