@@ -20,22 +20,8 @@ const App = () => {
             </AuthRoute>
           }
         />
-        <Route
-          path="/login"
-          element={
-            <AuthRoute>
-              <SignIn />
-            </AuthRoute>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <AuthRoute>
-              <SignUp />
-            </AuthRoute>
-          }
-        />
+        <Route path="/login" element={<SignIn />} />
+        <Route path="/register" element={<SignUp />} />
         <Route
           path="/deck/:deckName"
           element={

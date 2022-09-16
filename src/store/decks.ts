@@ -5,9 +5,10 @@ interface ILanguage {
   text: string;
 }
 
-interface IDecks {
+interface IDeck {
   name: string;
   phrases: Array<Array<ILanguage>>;
+  id: string;
 }
 
 interface INewDeckAction {
@@ -40,10 +41,14 @@ interface IChangeAction {
 
 const decksSlice = createSlice({
   name: 'decks',
-  initialState: Array<IDecks>,
+  initialState: Array<IDeck>,
   reducers: {
     addNewDeck(state, action: INewDeckAction) {
-      state.push({ name: action.payload, phrases: [] });
+      state.push({
+        name: action.payload,
+        phrases: [],
+        id: String(state.length + 1),
+      });
     },
     addNewLang(state, action: INewLangAction) {
       state

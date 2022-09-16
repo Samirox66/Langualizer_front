@@ -1,14 +1,18 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { useAppDispatch } from '../store/hooks';
+import { userActions } from '../store/user';
 
 import './SignUp.scss';
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
@@ -30,7 +34,12 @@ const SignUp = () => {
           withCredentials: true,
         }
       )
-      .then((response) => console.log(response.data))
+      .then((response) => {
+        dispatch(
+          userActions.setUsernameAndEmail({ username: username, email: email })
+        );
+        navigate('/');
+      })
       .catch((error) => {
         if (error.response) console.log(error.response.data);
         else console.log(error);

@@ -1,25 +1,51 @@
 import React from 'react';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { useAppDispatch } from '../store/hooks';
+import { userActions } from '../store/user';
 
 import './SignIn.scss';
 
 const SignIn = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useAppDispatch();
 
   const handleOnSubmit = (e) => {
     e.preventDefault();
     if (!email || !password) {
       return;
     }
+    axios
+      .post(
+        '/login',
+        {
+          email: email,
+          password: password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        dispatch(userActions.setUsernameAndEmail({ username: '', email }));
+        navigate('/');
+      })
+      .catch((error) => {
+        if (error.response) console.log(error.response.data);
+        else console.log(error);
+      });
   };
 
   return (
     <main className="sign-in">
       <section className="sign-in__container">
-        <h1 className="sing-in__title">Registration</h1>
+        <h1 className="sing-in__title">Authorization</h1>
         <form className="sign-in__form" onSubmit={handleOnSubmit}>
           <label className="sign-in__label" htmlFor="email">
             Email:
