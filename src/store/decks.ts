@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import axios from '../api/axios';
 
 interface ILanguage {
   language: string;
@@ -39,6 +40,13 @@ interface IChangeAction {
   };
 }
 
+interface IDbDecksAction {
+  type: string;
+  payload: {
+    email: string;
+  };
+}
+
 const decksSlice = createSlice({
   name: 'decks',
   initialState: Array<IDeck>,
@@ -46,7 +54,7 @@ const decksSlice = createSlice({
     addNewDeck(state, action: INewDeckAction) {
       state.push({
         name: action.payload,
-        phrases: [],
+        phrases: [[{ text: '', language: '' }]],
         id: String(state.length + 1),
       });
     },
@@ -59,7 +67,6 @@ const decksSlice = createSlice({
       state
         .find((deck) => deck.name == action.payload)
         ?.phrases.push([{ text: '', language: '' }]);
-      console.log(state.find((deck) => deck.name == action.payload)?.phrases);
     },
     changeLang(state, action: IChangeAction) {
       const { deckName, phraseIndex, langIndex, changedValue } = action.payload;
@@ -80,6 +87,33 @@ const decksSlice = createSlice({
       if (lang) {
         lang.text = changedValue;
       }
+    },
+    loadDecksFromDb(state, action: IDbDecksAction) {
+      axios
+        .post('/home', action.payload.email, {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true,
+        })
+        .then((response) => {
+          state = [...state, ...response.data];
+          console.log('good');
+        })
+        .catch((error) => console.log(error));
+    },
+    saveDecksToDb(state, action: IDbDecksAction) {
+      const decks = state.map((deck) => {
+        return { ...deck, email: action.payload.email };
+      });
+      console.log(decks);
+      axios
+        .post('/home/save', [...decks], {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        })
+        .then((response) => console.log(response.data))
+        .catch((err) => console.log(err));
     },
   },
 });

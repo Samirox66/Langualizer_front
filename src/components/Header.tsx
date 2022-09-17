@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/user';
 
@@ -8,14 +10,19 @@ import './Header.scss';
 const Header = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const userName = useAppSelector((state) => state.user.username);
+  const email = useAppSelector((state) => state.user.email);
+  const handleOnSaveDecks = (e) => {
+    e.preventDefault();
+    dispatch(decksActions.saveDecksToDb({ email }));
+  };
   const handleOnSignOutClick = (e) => {
     e.preventDefault();
     dispatch(userActions.signOut());
     navigate('/login');
   };
-  const email = useAppSelector((state) => state.user.email);
   const userInfo =
-    email == '' ? (
+    userName == '' ? (
       <>
         <li className="header__item">
           <Link to={'/login'} className="header__home">
@@ -31,7 +38,12 @@ const Header = () => {
     ) : (
       <>
         <li className="header_item">
-          <p className="header_user">{email}</p>
+          <form onSubmit={handleOnSaveDecks}>
+            <button>Save decks</button>
+          </form>
+        </li>
+        <li className="header_item">
+          <p className="header_user">{userName}</p>
         </li>
         <li className="header__item">
           <button onClick={handleOnSignOutClick} className="header__home">

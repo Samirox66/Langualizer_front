@@ -2,6 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
+import { decksActions } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
 import { userActions } from '../store/user';
 
@@ -38,6 +39,7 @@ const SignUp = () => {
         dispatch(
           userActions.setUsernameAndEmail({ username: username, email: email })
         );
+        //dispatch(decksActions.setDecksFromDb({ email: email }));
         navigate('/');
       })
       .catch((error) => {
