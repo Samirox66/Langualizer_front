@@ -75,7 +75,7 @@ const decksSlice = createSlice({
     },
     addNewLang(state, action: INewLangAction) {
       state
-        .find((deck) => (deck.name = action.payload.deckName))
+        .find((deck) => deck.name == action.payload.deckName)
         ?.phrases[action.payload.index].push({ text: '', language: '' });
     },
     addNewPhrase(state, action: INewPhraseAction) {
@@ -116,6 +116,9 @@ const decksSlice = createSlice({
         })
         .then((response) => console.log(response.data))
         .catch((err) => console.log(err));
+    },
+    clearState(state) {
+      state.length = 0;
     },
   },
   extraReducers: (builder) => {

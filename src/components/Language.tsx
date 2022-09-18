@@ -21,9 +21,9 @@ const Language = ({
     if (deckName) {
       dispatch(
         decksActions.changeLang({
-          deckName: deckName,
-          phraseIndex: phraseIndex,
-          langIndex: langIndex,
+          deckName,
+          phraseIndex,
+          langIndex,
           changedValue: event.target.value,
         })
       );

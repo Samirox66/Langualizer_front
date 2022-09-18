@@ -12,14 +12,14 @@ interface IPhraseProps {
 
 const Phrase = ({ phrase, index }: IPhraseProps) => {
   const { deckName } = useParams();
-  const phraseElements = phrase.map((language, index) => {
+  const phraseElements = phrase.map((language, langIndex) => {
     return (
       <Language
         language={language.language}
         text={language.text}
         key={index}
         phraseIndex={index}
-        langIndex={index}
+        langIndex={langIndex}
       />
     );
   });
