@@ -5,6 +5,8 @@ import './Decks.scss';
 
 const Decks = () => {
   const decks = useAppSelector((state) => state.decks);
+  console.log(decks);
+
   const decksElements = decks.map((deck, index) => {
     return (
       <Link key={index} to={`deck/${deck.name}`}>

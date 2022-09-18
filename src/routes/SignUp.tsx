@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import { decksActions } from '../store/decks';
+import { decksActions, loadDecksFromDb } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
 import { userActions } from '../store/user';
 
@@ -36,10 +36,8 @@ const SignUp = () => {
         }
       )
       .then((response) => {
-        dispatch(
-          userActions.setUsernameAndEmail({ username: username, email: email })
-        );
-        //dispatch(decksActions.setDecksFromDb({ email: email }));
+        dispatch(userActions.setUsernameAndEmail({ username, email }));
+        dispatch(loadDecksFromDb(email));
         navigate('/');
       })
       .catch((error) => {

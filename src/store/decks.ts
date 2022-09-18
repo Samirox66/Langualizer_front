@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from '../api/axios';
 
 interface ILanguage {
@@ -9,7 +9,7 @@ interface ILanguage {
 interface IDeck {
   name: string;
   phrases: Array<Array<ILanguage>>;
-  id: string;
+  published: boolean;
 }
 
 interface INewDeckAction {
@@ -47,6 +47,21 @@ interface IDbDecksAction {
   };
 }
 
+const loadDecksFromDb = createAsyncThunk(
+  'decks/save',
+  async (email: string) => {
+    try {
+      const response = await axios.get(`/home?email=${email}`, {
+        withCredentials: true,
+      });
+      console.log('saved');
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const decksSlice = createSlice({
   name: 'decks',
   initialState: Array<IDeck>,
@@ -55,7 +70,7 @@ const decksSlice = createSlice({
       state.push({
         name: action.payload,
         phrases: [[{ text: '', language: '' }]],
-        id: String(state.length + 1),
+        published: false,
       });
     },
     addNewLang(state, action: INewLangAction) {
@@ -88,23 +103,10 @@ const decksSlice = createSlice({
         lang.text = changedValue;
       }
     },
-    loadDecksFromDb(state, action: IDbDecksAction) {
-      axios
-        .post('/home', action.payload.email, {
-          headers: { 'Content-Type': 'application/json' },
-          withCredentials: true,
-        })
-        .then((response) => {
-          state = [...state, ...response.data];
-          console.log('good');
-        })
-        .catch((error) => console.log(error));
-    },
     saveDecksToDb(state, action: IDbDecksAction) {
       const decks = state.map((deck) => {
         return { ...deck, email: action.payload.email };
       });
-      console.log(decks);
       axios
         .post('/home/save', [...decks], {
           headers: {
@@ -116,8 +118,15 @@ const decksSlice = createSlice({
         .catch((err) => console.log(err));
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(loadDecksFromDb.fulfilled, (state, action) => {
+      action.payload.forEach((deck) => {
+        state.push(deck);
+      });
+    });
+  },
 });
 
-export { ILanguage };
+export { ILanguage, loadDecksFromDb };
 export const decksActions = decksSlice.actions;
 export default decksSlice;
