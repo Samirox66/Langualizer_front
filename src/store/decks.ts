@@ -10,9 +10,15 @@ interface IDeck {
   name: string;
   phrases: Array<Array<ILanguage>>;
   published: boolean;
+  visible: boolean;
 }
 
 interface INewDeckAction {
+  type: string;
+  payload: string;
+}
+
+interface IDeleteDeckAction {
   type: string;
   payload: string;
 }
@@ -22,11 +28,28 @@ interface INewPhraseAction {
   payload: string;
 }
 
+interface IDeletePhraseAction {
+  type: string;
+  payload: {
+    deckName: string;
+    phraseIndex: number;
+  };
+}
+
 interface INewLangAction {
   type: string;
   payload: {
     deckName: string;
-    index: number;
+    phraseIndex: number;
+  };
+}
+
+interface IDeleteLangAction {
+  type: string;
+  payload: {
+    deckName: string;
+    phraseIndex: number;
+    langIndex: number;
   };
 }
 
@@ -44,6 +67,13 @@ interface IDbDecksAction {
   type: string;
   payload: {
     email: string;
+  };
+}
+
+interface IFilterDecksAction {
+  type: string;
+  payload: {
+    deckRegex: string;
   };
 }
 
@@ -66,17 +96,66 @@ const decksSlice = createSlice({
   name: 'decks',
   initialState: Array<IDeck>,
   reducers: {
+    filterDecks(state, action: IFilterDecksAction) {},
     addNewDeck(state, action: INewDeckAction) {
       state.push({
         name: action.payload,
         phrases: [[{ text: '', language: '' }]],
         published: false,
+        visible: true,
       });
+    },
+    deleteDeck(state, action: IDeleteDeckAction) {
+      const deck = state.find((deck) => deck.name == action.payload);
+      if (deck) {
+        const indexOfDeck = state.indexOf(deck);
+        state.splice(indexOfDeck, 1);
+      }
     },
     addNewLang(state, action: INewLangAction) {
       state
         .find((deck) => deck.name == action.payload.deckName)
-        ?.phrases[action.payload.index].push({ text: '', language: '' });
+        ?.phrases[action.payload.phraseIndex]?.push({ text: '', language: '' });
+    },
+    deleteLang(state, action: IDeleteLangAction) {
+      const { deckName, langIndex, phraseIndex } = action.payload;
+      const lang = state.find((deck) => deck.name == deckName)?.phrases[
+        phraseIndex
+      ][langIndex];
+      if (lang == undefined) {
+        return;
+      }
+
+      const indexToDelete = state
+        .find((deck) => deck.name == deckName)
+        ?.phrases[phraseIndex].indexOf(lang);
+      if (indexToDelete == undefined) {
+        return;
+      }
+
+      state
+        .find((deck) => deck.name == deckName)
+        ?.phrases[phraseIndex].splice(indexToDelete, 1);
+    },
+    deletePhrase(state, action: IDeletePhraseAction) {
+      const { deckName, phraseIndex } = action.payload;
+      const phrase = state.find((deck) => deck.name == deckName)?.phrases[
+        phraseIndex
+      ];
+      if (phrase == undefined) {
+        return;
+      }
+
+      const indexToDelete = state
+        .find((deck) => deck.name == deckName)
+        ?.phrases.indexOf(phrase);
+      if (indexToDelete == undefined) {
+        return;
+      }
+
+      state
+        .find((deck) => deck.name == deckName)
+        ?.phrases.splice(indexToDelete, 1);
     },
     addNewPhrase(state, action: INewPhraseAction) {
       state

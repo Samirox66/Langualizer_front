@@ -23,6 +23,9 @@ const Header = () => {
     dispatch(decksActions.clearState());
     navigate('/login');
   };
+
+  const handleOnSearchDeckChange = (e) => {};
+
   const userInfo =
     userName == '' ? (
       <>
@@ -39,6 +42,9 @@ const Header = () => {
       </>
     ) : (
       <>
+        <li className="header__item">
+          <input className="header__find-deck" />
+        </li>
         <li className="header_item">
           <form onSubmit={handleOnSaveDecks}>
             <button>Save decks</button>
@@ -66,9 +72,6 @@ const Header = () => {
           <Link to={'/play'} className="header__home">
             Play
           </Link>
-        </li>
-        <li className="header__item">
-          <input className="header__find-deck" />
         </li>
         {userInfo}
       </ul>

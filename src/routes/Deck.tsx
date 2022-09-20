@@ -9,8 +9,10 @@ const Deck = () => {
   const deck = useAppSelector((state) => {
     return state.decks.find((phrase) => phrase.name == deckName);
   });
+  console.log(deckName);
+
   const deckPhrases = deck?.phrases?.map((phrase, index) => {
-    return <Phrase phrase={phrase} key={index} index={index} />;
+    return <Phrase phrase={phrase} key={index} phraseIndex={index} />;
   });
   const dispatch = useAppDispatch();
   const handleOnAddPhraseButtonClick = (

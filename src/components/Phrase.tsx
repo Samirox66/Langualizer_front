@@ -7,18 +7,18 @@ import './Phrase.scss';
 
 interface IPhraseProps {
   phrase: Array<ILanguage>;
-  index: number;
+  phraseIndex: number;
 }
 
-const Phrase = ({ phrase, index }: IPhraseProps) => {
+const Phrase = ({ phrase, phraseIndex }: IPhraseProps) => {
   const { deckName } = useParams();
   const phraseElements = phrase.map((language, langIndex) => {
     return (
       <Language
         language={language.language}
         text={language.text}
-        key={index}
-        phraseIndex={index}
+        key={phraseIndex}
+        phraseIndex={phraseIndex}
         langIndex={langIndex}
       />
     );
@@ -30,9 +30,19 @@ const Phrase = ({ phrase, index }: IPhraseProps) => {
   ) => {
     e.preventDefault();
     if (deckName) {
-      dispatch(decksActions.addNewLang({ deckName: deckName, index: index }));
+      dispatch(decksActions.addNewLang({ deckName: deckName, phraseIndex }));
     }
   };
+
+  const handleOnDeletePhraseButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+    if (deckName) {
+      dispatch(decksActions.deletePhrase({ deckName, phraseIndex }));
+    }
+  };
+
   return (
     <section className="phrase">
       <section className="phrase__container">
@@ -43,6 +53,12 @@ const Phrase = ({ phrase, index }: IPhraseProps) => {
           Add language
         </button>
         {phraseElements}
+        <button
+          className="phrase__delete-button"
+          onClick={handleOnDeletePhraseButtonClick}
+        >
+          X
+        </button>
       </section>
     </section>
   );

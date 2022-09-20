@@ -4,6 +4,7 @@ import AuthRoute from './components/AuthRoute';
 import Header from './components/Header';
 import Deck from './routes/Deck';
 import Learn from './routes/Learn';
+import Play from './routes/Play';
 import SignIn from './routes/SignIn';
 import SignUp from './routes/SignUp';
 
@@ -27,6 +28,14 @@ const App = () => {
           element={
             <AuthRoute>
               <Deck />
+            </AuthRoute>
+          }
+        />
+        <Route
+          path="/play"
+          element={
+            <AuthRoute>
+              <Play />
             </AuthRoute>
           }
         />

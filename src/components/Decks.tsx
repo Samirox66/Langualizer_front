@@ -1,17 +1,34 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAppSelector } from '../store/hooks';
+import { decksActions } from '../store/decks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import './Decks.scss';
 
 const Decks = () => {
   const decks = useAppSelector((state) => state.decks);
-  console.log(decks);
+  const dispatch = useAppDispatch();
 
   const decksElements = decks.map((deck, index) => {
+    const handleOnDeleteDeckButtonClick = (
+      e: React.MouseEvent<HTMLButtonElement>
+    ) => {
+      e.preventDefault();
+      dispatch(decksActions.deleteDeck(deck.name));
+    };
     return (
-      <Link key={index} to={`deck/${deck.name}`}>
-        <button className="decks__deck-button">{deck.name}</button>
-      </Link>
+      <section className="decks__deck" key={index}>
+        <Link to={`/deck/${deck.name}`}>
+          <button className="decks__deck-button">
+            {deck.name.toUpperCase()}
+          </button>
+        </Link>
+        <button
+          onClick={handleOnDeleteDeckButtonClick}
+          className="decks__delete-button"
+        >
+          X
+        </button>
+      </section>
     );
   });
   return (
