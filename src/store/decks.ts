@@ -96,7 +96,15 @@ const decksSlice = createSlice({
   name: 'decks',
   initialState: Array<IDeck>,
   reducers: {
-    filterDecks(state, action: IFilterDecksAction) {},
+    filterDecks(state, action: IFilterDecksAction) {
+      state.map((deck) => {
+        if (deck.name.search(action.payload.deckRegex)) {
+          deck.visible = false;
+        } else if (deck.visible == false) {
+          deck.visible = true;
+        }
+      });
+    },
     addNewDeck(state, action: INewDeckAction) {
       state.push({
         name: action.payload,
@@ -203,7 +211,7 @@ const decksSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loadDecksFromDb.fulfilled, (state, action) => {
       action.payload.forEach((deck) => {
-        state.push(deck);
+        state.push({ ...deck, visible: true });
       });
     });
   },

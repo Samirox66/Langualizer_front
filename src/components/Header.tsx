@@ -24,7 +24,9 @@ const Header = () => {
     navigate('/login');
   };
 
-  const handleOnSearchDeckChange = (e) => {};
+  const handleOnSearchDeckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(decksActions.filterDecks({ deckRegex: e.currentTarget.value }));
+  };
 
   const userInfo =
     userName == '' ? (
@@ -43,7 +45,10 @@ const Header = () => {
     ) : (
       <>
         <li className="header__item">
-          <input className="header__find-deck" />
+          <input
+            className="header__find-deck"
+            onChange={handleOnSearchDeckChange}
+          />
         </li>
         <li className="header_item">
           <form onSubmit={handleOnSaveDecks}>
