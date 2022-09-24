@@ -1,6 +1,17 @@
 .phrase {
+  margin-top: 2%;
+
   &__container {
+    padding-top: 1%;
     display: flex;
     flex-wrap: wrap;
+    padding-bottom: 1%;
+  }
+
+  &__delete-button {
+    margin-top: 1%;
+    background-color: rgb(250, 23, 23);
+    color: white;
+    border: none;
   }
 }

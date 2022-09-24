@@ -12,20 +12,12 @@ const Header = () => {
   const navigate = useNavigate();
   const userName = useAppSelector((state) => state.user.username);
   const email = useAppSelector((state) => state.user.email);
-  const handleOnSaveDecks = (e) => {
-    e.preventDefault();
-    dispatch(decksActions.saveDecksToDb({ email }));
-  };
   const handleOnSignOutClick = (e) => {
     e.preventDefault();
     dispatch(userActions.signOut());
     dispatch(decksActions.saveDecksToDb({ email }));
     dispatch(decksActions.clearState());
     navigate('/login');
-  };
-
-  const handleOnSearchDeckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(decksActions.filterDecks({ deckRegex: e.currentTarget.value }));
   };
 
   const userInfo =
@@ -44,17 +36,6 @@ const Header = () => {
       </>
     ) : (
       <>
-        <li className="header__item">
-          <input
-            className="header__find-deck"
-            onChange={handleOnSearchDeckChange}
-          />
-        </li>
-        <li className="header_item">
-          <form onSubmit={handleOnSaveDecks}>
-            <button>Save decks</button>
-          </form>
-        </li>
         <li className="header_item">
           <p className="header_user">{userName}</p>
         </li>
@@ -67,19 +48,16 @@ const Header = () => {
     );
   return (
     <header className="header">
-      <ul className="header__list">
-        <li className="header__item">
-          <Link to={'/'} className="header__home">
-            Home
-          </Link>
-        </li>
-        <li className="header__item">
-          <Link to={'/play'} className="header__home">
-            Play
-          </Link>
-        </li>
-        {userInfo}
-      </ul>
+      <section className="header__container">
+        <ul className="header__list">
+          <li className="header__item">
+            <Link to={'/'} className="header__home">
+              Home
+            </Link>
+          </li>
+          {userInfo}
+        </ul>
+      </section>
     </header>
   );
 };

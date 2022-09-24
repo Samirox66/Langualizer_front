@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import languages from '../data/languages';
 import { decksActions, ILanguage } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
 import './Language.scss';
@@ -17,6 +18,14 @@ const Language = ({
 }: ILanguageProp) => {
   const { deckName } = useParams();
   const dispatch = useAppDispatch();
+  const [languageFocused, setLanguageFocused] = useState(false);
+  const peekLanguageElement = languages.map((language, index) => {
+    return (
+      <div className="language__peek-language" key={index}>
+        {language}
+      </div>
+    );
+  });
   const handleOnChangeLang = (event) => {
     if (deckName) {
       dispatch(
@@ -56,13 +65,18 @@ const Language = ({
           <label className="language__label" htmlFor="language">
             Choose language:
           </label>
-          <input
-            onChange={handleOnChangeLang}
-            id="language"
-            name="language"
-            value={language}
-            className="language__input"
-          ></input>
+          <section className="language__peek">
+            <input
+              onChange={handleOnChangeLang}
+              onFocus={(e) => setLanguageFocused(true)}
+              onBlur={(e) => setLanguageFocused(false)}
+              id="language"
+              name="language"
+              value={language}
+              className="language__input"
+            />
+            {languageFocused && peekLanguageElement}
+          </section>
         </section>
         <section className="language__text">
           <label className="language__label" htmlFor="language">
