@@ -15,9 +15,14 @@
     width: 60%;
   }
 
+  &__peek-languages {
+    width: 100%;
+    margin-right: 6.5%;
+  }
+
   &__peek-language {
     width: 100%;
-
+    background-color: white;
     border: 2px solid rgba(0, 0, 0, 0.25);
     padding: 2%;
     cursor: pointer;

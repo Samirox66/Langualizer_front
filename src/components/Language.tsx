@@ -19,21 +19,55 @@ const Language = ({
   const { deckName } = useParams();
   const dispatch = useAppDispatch();
   const [languageFocused, setLanguageFocused] = useState(false);
-  const peekLanguageElement = languages.map((language, index) => {
-    return (
-      <div className="language__peek-language" key={index}>
-        {language}
-      </div>
-    );
-  });
-  const handleOnChangeLang = (event) => {
+  const [filterLangs, setFilterLangs] = useState(languages);
+  const handleOnPeekLangButtonClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    language: string
+  ) => {
+    event.preventDefault();
+    console.log(language);
     if (deckName) {
       dispatch(
         decksActions.changeLang({
           deckName,
           phraseIndex,
           langIndex,
-          changedValue: event.target.value,
+          changedValue: language,
+        })
+      );
+
+      setLanguageFocused(false);
+    }
+  };
+  const peekLanguageElement = filterLangs.map((language, index) => {
+    return (
+      <button
+        className="language__peek-language"
+        onClick={(e) => handleOnPeekLangButtonClick(e, language)}
+        key={index}
+        type="button"
+      >
+        {language}
+      </button>
+    );
+  });
+  const handleOnChangeLang = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (deckName) {
+      dispatch(
+        decksActions.changeLang({
+          deckName,
+          phraseIndex,
+          langIndex,
+          changedValue: event.currentTarget.value,
+        })
+      );
+    }
+    if (languageFocused) {
+      setFilterLangs(
+        languages.filter((language) => {
+          return language
+            .toLowerCase()
+            .includes(event.currentTarget.value.toLowerCase());
         })
       );
     }
@@ -69,13 +103,16 @@ const Language = ({
             <input
               onChange={handleOnChangeLang}
               onFocus={(e) => setLanguageFocused(true)}
-              onBlur={(e) => setLanguageFocused(false)}
               id="language"
               name="language"
               value={language}
               className="language__input"
             />
-            {languageFocused && peekLanguageElement}
+            {languageFocused && (
+              <section className="language__peek-languages">
+                {peekLanguageElement}
+              </section>
+            )}
           </section>
         </section>
         <section className="language__text">
