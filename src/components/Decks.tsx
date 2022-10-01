@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import './Decks.scss';
 
 const Decks = () => {
-  const decks = useAppSelector((state) => state.decks);
+  const decks = useAppSelector((state) => state.decks.decks);
   const dispatch = useAppDispatch();
 
   const decksElements = decks

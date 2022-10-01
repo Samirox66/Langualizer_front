@@ -8,21 +8,28 @@ import './Phrase.scss';
 interface IPhraseProps {
   phrase: Array<ILanguage>;
   phraseIndex: number;
+  notFilteredLanguages: Array<string>;
 }
 
-const Phrase = ({ phrase, phraseIndex }: IPhraseProps) => {
+const Phrase = ({
+  phrase,
+  phraseIndex,
+  notFilteredLanguages,
+}: IPhraseProps) => {
   const { deckName } = useParams();
-  const phraseElements = phrase.map((language, langIndex) => {
-    return (
-      <Language
-        language={language.language}
-        text={language.text}
-        key={phraseIndex}
-        phraseIndex={phraseIndex}
-        langIndex={langIndex}
-      />
-    );
-  });
+  const phraseElements = phrase
+    .filter((language) => !notFilteredLanguages.includes(language.language))
+    .map((language) => {
+      return (
+        <Language
+          language={language.language}
+          text={language.text}
+          key={phraseIndex}
+          phraseIndex={phraseIndex}
+          langIndex={language.key}
+        />
+      );
+    });
   const dispatch = useAppDispatch();
 
   const handleOnAddLangButtonClick = (

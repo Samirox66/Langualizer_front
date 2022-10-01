@@ -4,6 +4,7 @@ import axios from '../api/axios';
 interface ILanguage {
   language: string;
   text: string;
+  key: number;
 }
 
 interface IDeck {
@@ -92,13 +93,23 @@ const loadDecksFromDb = createAsyncThunk(
   }
 );
 
+interface IState {
+  decks: Array<IDeck>;
+  key: number;
+}
+
+const initialState: IState = {
+  decks: [],
+  key: 0,
+};
+
 const decksSlice = createSlice({
   name: 'decks',
-  initialState: Array<IDeck>,
+  initialState: initialState,
   reducers: {
     filterDecks(state, action: IFilterDecksAction) {
-      state.map((deck) => {
-        if (deck.name.search(action.payload.deckRegex)) {
+      state.decks.map((deck) => {
+        if (!deck.name.includes(action.payload.deckRegex)) {
           deck.visible = false;
         } else if (deck.visible == false) {
           deck.visible = true;
@@ -106,92 +117,101 @@ const decksSlice = createSlice({
       });
     },
     addNewDeck(state, action: INewDeckAction) {
-      state.push({
+      state.decks.push({
         name: action.payload,
-        phrases: [[{ text: '', language: '' }]],
+        phrases: [[{ text: '', language: '', key: state.key }]],
         published: false,
         visible: true,
       });
+      ++state.key;
     },
     deleteDeck(state, action: IDeleteDeckAction) {
-      const deck = state.find((deck) => deck.name == action.payload);
+      const deck = state.decks.find((deck) => deck.name == action.payload);
       if (deck) {
-        const indexOfDeck = state.indexOf(deck);
-        state.splice(indexOfDeck, 1);
+        const indexOfDeck = state.decks.indexOf(deck);
+        state.decks.splice(indexOfDeck, 1);
       }
     },
     addNewLang(state, action: INewLangAction) {
-      state
+      state.decks
         .find((deck) => deck.name == action.payload.deckName)
-        ?.phrases[action.payload.phraseIndex]?.push({ text: '', language: '' });
+        ?.phrases[action.payload.phraseIndex]?.push({
+          text: '',
+          language: '',
+          key: state.key,
+        });
+      ++state.key;
     },
     deleteLang(state, action: IDeleteLangAction) {
       const { deckName, langIndex, phraseIndex } = action.payload;
-      const lang = state.find((deck) => deck.name == deckName)?.phrases[
+      const lang = state.decks.find((deck) => deck.name == deckName)?.phrases[
         phraseIndex
       ][langIndex];
       if (lang == undefined) {
         return;
       }
 
-      const indexToDelete = state
+      const indexToDelete = state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases[phraseIndex].indexOf(lang);
       if (indexToDelete == undefined) {
         return;
       }
 
-      state
+      state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases[phraseIndex].splice(indexToDelete, 1);
     },
     deletePhrase(state, action: IDeletePhraseAction) {
       const { deckName, phraseIndex } = action.payload;
-      const phrase = state.find((deck) => deck.name == deckName)?.phrases[
+      const phrase = state.decks.find((deck) => deck.name == deckName)?.phrases[
         phraseIndex
       ];
       if (phrase == undefined) {
         return;
       }
 
-      const indexToDelete = state
+      const indexToDelete = state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases.indexOf(phrase);
       if (indexToDelete == undefined) {
         return;
       }
 
-      state
+      state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases.splice(indexToDelete, 1);
     },
     addNewPhrase(state, action: INewPhraseAction) {
-      state
+      state.decks
         .find((deck) => deck.name == action.payload)
-        ?.phrases.push([{ text: '', language: '' }]);
+        ?.phrases.push([{ text: '', language: '', key: state.key }]);
+      ++state.key;
     },
     changeLang(state, action: IChangeAction) {
       const { deckName, phraseIndex, langIndex, changedValue } = action.payload;
-      const lang = state
+      const lang = state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases.at(phraseIndex)
-        ?.at(langIndex);
+        ?.find((language) => language.key == langIndex);
       if (lang) {
         lang.language = changedValue;
       }
     },
     changeText(state, action: IChangeAction) {
       const { deckName, phraseIndex, langIndex, changedValue } = action.payload;
-      const lang = state
+      console.log(deckName, phraseIndex, langIndex, changedValue);
+
+      const lang = state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases.at(phraseIndex)
-        ?.at(langIndex);
+        ?.find((language) => language.key == langIndex);
       if (lang) {
         lang.text = changedValue;
       }
     },
     saveDecksToDb(state, action: IDbDecksAction) {
-      const decks = state.map((deck) => {
+      const decks = state.decks.map((deck) => {
         return { ...deck, email: action.payload.email };
       });
       axios
@@ -205,13 +225,13 @@ const decksSlice = createSlice({
         .catch((err) => console.log(err));
     },
     clearState(state) {
-      state.length = 0;
+      state.decks.length = 0;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(loadDecksFromDb.fulfilled, (state, action) => {
       action.payload.forEach((deck) => {
-        state.push({ ...deck, visible: true });
+        state.decks.push({ ...deck, visible: true });
       });
     });
   },

@@ -14,7 +14,7 @@ const Deck = () => {
   const [allLanguages, setAllLanguages] = useState(true);
   const { deckName } = useParams();
   const deck = useAppSelector((state) => {
-    return state.decks.find((phrase) => phrase.name == deckName);
+    return state.decks.decks.find((phrase) => phrase.name == deckName);
   });
 
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,16 @@ const Deck = () => {
   };
 
   const deckPhrases = deck?.phrases?.map((phrase, index) => {
-    return <Phrase phrase={phrase} key={index} phraseIndex={index} />;
+    return (
+      <Phrase
+        phrase={phrase}
+        key={index}
+        phraseIndex={index}
+        notFilteredLanguages={filterLanguages
+          .filter((language) => !language.checked)
+          .map((language) => language.language)}
+      />
+    );
   });
 
   const languagesElements = filterLanguages.map((language) => {
@@ -94,7 +103,7 @@ const Deck = () => {
       <section className="deck__container">
         <section className="deck__actions">
           <button onClick={handleOnAddPhraseButtonClick}>Add phrase</button>
-          <button>Play</button>
+          <button type="button">Play</button>
         </section>
         <section className="deck__filter-languages">
           {languagesElements}

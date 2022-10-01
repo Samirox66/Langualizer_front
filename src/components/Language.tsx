@@ -36,6 +36,7 @@ const Language = ({
         })
       );
 
+      setFilterLangs([language]);
       setLanguageFocused(false);
     }
   };
