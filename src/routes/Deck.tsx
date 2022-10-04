@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import Phrase from '../components/Phrase';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import './Deck.scss';
 
 const Deck = () => {
   const [filterLanguages, setFilterLanguages] = useState(
@@ -72,7 +74,9 @@ const Deck = () => {
           id={language.language}
           value={language.language}
         />
-        <label htmlFor={language.language}>{language.language}</label>
+        <label className="deck__filter-language" htmlFor={language.language}>
+          {language.language}
+        </label>
       </>
     );
   });
@@ -98,12 +102,15 @@ const Deck = () => {
       dispatch(decksActions.addNewPhrase(deckName));
     }
   };
+
   return (
     <section className="deck">
       <section className="deck__container">
         <section className="deck__actions">
           <button onClick={handleOnAddPhraseButtonClick}>Add phrase</button>
-          <button type="button">Play</button>
+          <Link to={`play`}>
+            <button type="button">Play</button>
+          </Link>
         </section>
         <section className="deck__filter-languages">
           {languagesElements}

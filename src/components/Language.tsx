@@ -25,7 +25,6 @@ const Language = ({
     language: string
   ) => {
     event.preventDefault();
-    console.log(language);
     if (deckName) {
       dispatch(
         decksActions.changeLang({

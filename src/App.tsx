@@ -32,7 +32,7 @@ const App = () => {
           }
         />
         <Route
-          path="/play"
+          path="/deck/:deckName/play"
           element={
             <AuthRoute>
               <Play />
