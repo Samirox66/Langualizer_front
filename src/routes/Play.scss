@@ -1,0 +1,13 @@
+.play {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__choose {
+    width: 20%;
+  }
+}

@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
+import './Play.scss';
 
 const Play = () => {
   const [isPlaying, setIsPlaying] = useState(false);
@@ -60,7 +61,14 @@ const Play = () => {
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-    if (firstLang.focused && secondLang.focused) {
+    console.log(firstLang.focused, secondLang.focused);
+
+    if (
+      !firstLang.focused &&
+      !secondLang.focused &&
+      firstLang.value != '' &&
+      secondLang.value! + ''
+    ) {
       setIsPlaying(true);
     }
   };
@@ -69,7 +77,7 @@ const Play = () => {
     <main className="play">
       <section className="play__container">
         {!isPlaying ? (
-          <section>
+          <section className="play__choose">
             <label className="language__label" htmlFor="language">
               Choose first language:
             </label>
