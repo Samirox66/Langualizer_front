@@ -36,8 +36,11 @@ const Header = () => {
       </>
     ) : (
       <>
-        <li className="header_item">
-          <p className="header_user">{userName}</p>
+        <li className="header__item">
+          <Link to={'/decks/shared'}>Load decks</Link>
+        </li>
+        <li className="header__item">
+          <p className="header__user">{userName}</p>
         </li>
         <li className="header__item">
           <button onClick={handleOnSignOutClick} className="header__home">

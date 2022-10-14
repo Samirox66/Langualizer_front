@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import PlayingDeck from '../components/PlayingDeck';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
@@ -67,7 +68,8 @@ const Play = () => {
       !firstLang.focused &&
       !secondLang.focused &&
       firstLang.value != '' &&
-      secondLang.value! + ''
+      secondLang.value! + '' &&
+      firstLang.value != secondLang.value
     ) {
       setIsPlaying(true);
     }
@@ -121,7 +123,10 @@ const Play = () => {
             <button onClick={handleOnStartButtonClick}>Start</button>
           </section>
         ) : (
-          <p>Playing</p>
+          <PlayingDeck
+            firstLang={firstLang.value}
+            secondLang={secondLang.value}
+          />
         )}
       </section>
     </main>

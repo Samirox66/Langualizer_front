@@ -24,7 +24,7 @@ const Phrase = ({
         <Language
           language={language.language}
           text={language.text}
-          key={phraseIndex}
+          key={language.key}
           phraseIndex={phraseIndex}
           langIndex={language.key}
         />

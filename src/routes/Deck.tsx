@@ -103,6 +103,12 @@ const Deck = () => {
     }
   };
 
+  const handleOnPublishDeckButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+  };
+
   return (
     <section className="deck">
       <section className="deck__container">
@@ -111,6 +117,7 @@ const Deck = () => {
           <Link to={`play`}>
             <button type="button">Play</button>
           </Link>
+          <button onClick={handleOnPublishDeckButtonClick}>Publish Deck</button>
         </section>
         <section className="deck__filter-languages">
           {languagesElements}
