@@ -1,3 +1,5 @@
+import Form from 'react-bootstrap/Form';
+import { Button } from 'react-bootstrap';
 import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -51,33 +53,29 @@ const SignIn = () => {
     <main className="sign-in">
       <section className="sign-in__container">
         <h1 className="sing-in__title">Authorization</h1>
-        <form className="sign-in__form" onSubmit={handleOnSubmit}>
-          <label className="sign-in__label" htmlFor="email">
-            Email:
-          </label>
-          <input
-            className="sign-in__input"
-            id="email"
-            type="email"
-            autoComplete="off"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-          <label className="sign-in__label" htmlFor="password">
-            Password:
-          </label>
-          <input
-            className="sign-in__input"
-            id="password"
-            type="password"
-            autoComplete="off"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <button>Sing in</button>
-        </form>
+        <Form onSubmit={handleOnSubmit}>
+          <Form.Group className="mb-3" controlId="signInEmail">
+            <Form.Label>Email:</Form.Label>
+            <Form.Control
+              type="email"
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="signInPassword">
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="email"
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            Sing in
+          </Button>
+        </Form>
         <p>Do not have an account yet?</p>
         <Link to="/registration">Sign up</Link>
       </section>

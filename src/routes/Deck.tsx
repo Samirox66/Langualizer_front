@@ -5,9 +5,11 @@ import Phrase from '../components/Phrase';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { Button, Stack } from 'react-bootstrap';
 import './Deck.scss';
 
 const Deck = () => {
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [filterLanguages, setFilterLanguages] = useState(
     languages.map((language) => {
       return { language, checked: true };
@@ -18,7 +20,9 @@ const Deck = () => {
   const deck = useAppSelector((state) => {
     return state.decks.decks.find((phrase) => phrase.name == deckName);
   });
-
+  if (!deck || !deckName) {
+    return <div>No such deck</div>;
+  }
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterLanguages(
       filterLanguages.map((language) => {
@@ -50,18 +54,15 @@ const Deck = () => {
     setAllLanguages(!allLanguages);
   };
 
-  const deckPhrases = deck?.phrases?.map((phrase, index) => {
-    return (
-      <Phrase
-        phrase={phrase}
-        key={index}
-        phraseIndex={index}
-        notFilteredLanguages={filterLanguages
-          .filter((language) => !language.checked)
-          .map((language) => language.language)}
-      />
-    );
-  });
+  const phrase = (
+    <Phrase
+      phrase={deck.phrases[currentPhraseIndex]}
+      phraseIndex={currentPhraseIndex}
+      notFilteredLanguages={filterLanguages
+        .filter((language) => !language.checked)
+        .map((language) => language.language)}
+    />
+  );
 
   const languagesElements = filterLanguages.map((language) => {
     return (
@@ -98,9 +99,8 @@ const Deck = () => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    if (deckName) {
-      dispatch(decksActions.addNewPhrase(deckName));
-    }
+    dispatch(decksActions.addNewPhrase(deckName));
+    setCurrentPhraseIndex(deck.phrases.length);
   };
 
   const handleOnPublishDeckButtonClick = (
@@ -109,20 +109,48 @@ const Deck = () => {
     e.preventDefault();
   };
 
+  const handlePrevPhraseButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setCurrentPhraseIndex((prev) => {
+      return (prev + deck?.phrases.length - 1) % deck?.phrases.length;
+    });
+  };
+
+  const handleNextPhraseButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setCurrentPhraseIndex((prev) => {
+      return (prev + 1) % deck?.phrases.length;
+    });
+  };
+
   return (
     <section className="deck">
       <section className="deck__container">
-        <section className="deck__actions">
-          <button onClick={handleOnAddPhraseButtonClick}>Add phrase</button>
+        <Stack direction="horizontal" gap={3}>
+          <Button variant="secondary" onClick={handleOnAddPhraseButtonClick}>
+            Add phrase
+          </Button>
           <Link to={`play`}>
-            <button type="button">Play</button>
+            <Button>Play</Button>
           </Link>
-          <button onClick={handleOnPublishDeckButtonClick}>Publish Deck</button>
-        </section>
+          <Button variant="primary" onClick={handleOnPublishDeckButtonClick}>
+            Publish Deck
+          </Button>
+          <Button variant="primary" onClick={handlePrevPhraseButtonClick}>
+            prev
+          </Button>
+          <Button variant="primary" onClick={handleNextPhraseButtonClick}>
+            next
+          </Button>
+        </Stack>
         <section className="deck__filter-languages">
           {languagesElements}
         </section>
-        {deckPhrases}
+        {phrase}
       </section>
     </section>
   );
