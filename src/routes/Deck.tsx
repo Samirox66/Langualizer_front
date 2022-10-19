@@ -131,7 +131,7 @@ const Deck = () => {
     <section className="deck">
       <section className="deck__container">
         <Stack direction="horizontal" gap={3}>
-          <Button variant="secondary" onClick={handleOnAddPhraseButtonClick}>
+          <Button variant="primary" onClick={handleOnAddPhraseButtonClick}>
             Add phrase
           </Button>
           <Link to={`play`}>
@@ -140,10 +140,10 @@ const Deck = () => {
           <Button variant="primary" onClick={handleOnPublishDeckButtonClick}>
             Publish Deck
           </Button>
-          <Button variant="primary" onClick={handlePrevPhraseButtonClick}>
+          <Button variant="info" onClick={handlePrevPhraseButtonClick}>
             prev
           </Button>
-          <Button variant="primary" onClick={handleNextPhraseButtonClick}>
+          <Button variant="info" onClick={handleNextPhraseButtonClick}>
             next
           </Button>
         </Stack>

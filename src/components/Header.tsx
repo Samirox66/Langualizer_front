@@ -1,6 +1,6 @@
 import React from 'react';
+import { Container, Navbar, Nav, NavDropdown, Button } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from '../api/axios';
 import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { userActions } from '../store/user';
@@ -23,45 +23,46 @@ const Header = () => {
   const userInfo =
     userName == '' ? (
       <>
-        <li className="header__item">
-          <Link to={'/login'} className="header__home">
+        <Nav.Link>
+          <Link to={'/login'} className="header__link">
             Sign in
           </Link>
-        </li>
-        <li className="header__item">
-          <Link to={'/register'} className="header__home">
+        </Nav.Link>
+        <Nav.Link>
+          <Link to={'/register'} className="header__link">
             Sign up
           </Link>
-        </li>
+        </Nav.Link>
       </>
     ) : (
       <>
-        <li className="header__item">
-          <Link to={'/decks/shared'}>Load decks</Link>
-        </li>
-        <li className="header__item">
-          <p className="header__user">{userName}</p>
-        </li>
-        <li className="header__item">
-          <button onClick={handleOnSignOutClick} className="header__home">
+        <Nav.Link>
+          <Link to={'/decks/shared'} className="header__link">
+            Load decks
+          </Link>
+        </Nav.Link>
+        <p className="header__user">{userName}</p>
+        <Nav.Link>
+          <Button onClick={handleOnSignOutClick} variant="primary">
             Sign out
-          </button>
-        </li>
+          </Button>
+        </Nav.Link>
       </>
     );
   return (
-    <header className="header">
-      <section className="header__container">
-        <ul className="header__list">
-          <li className="header__item">
-            <Link to={'/'} className="header__home">
-              Home
-            </Link>
-          </li>
-          {userInfo}
-        </ul>
-      </section>
-    </header>
+    <Navbar bg="dark" expand="lg">
+      <Container>
+        <Navbar.Brand>
+          <Link to={'/'} className="header__link">
+            Langualizer
+          </Link>
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="navbar-nav" />
+        <Navbar.Collapse id="navbar-nav">
+          <Nav className="me-auto">{userInfo}</Nav>
+        </Navbar.Collapse>
+      </Container>
+    </Navbar>
   );
 };
 

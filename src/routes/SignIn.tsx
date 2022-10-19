@@ -1,5 +1,4 @@
-import Form from 'react-bootstrap/Form';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -58,6 +57,8 @@ const SignIn = () => {
             <Form.Label>Email:</Form.Label>
             <Form.Control
               type="email"
+              autoComplete="on"
+              value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
               }}
@@ -66,7 +67,8 @@ const SignIn = () => {
           <Form.Group className="mb-3" controlId="signInPassword">
             <Form.Label>Password:</Form.Label>
             <Form.Control
-              type="email"
+              type="password"
+              value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
               }}
@@ -76,8 +78,10 @@ const SignIn = () => {
             Sing in
           </Button>
         </Form>
-        <p>Do not have an account yet?</p>
-        <Link to="/registration">Sign up</Link>
+        <p className="sign-in__text">Do not have an account yet?</p>
+        <Link className="sign-in__link" to="/register">
+          Sign up
+        </Link>
       </section>
     </main>
   );

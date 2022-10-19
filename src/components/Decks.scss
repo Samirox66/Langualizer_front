@@ -1,17 +1,3 @@
 .decks {
-  &__container {
-    display: flex;
-    flex-direction: column;
-    width: 15%;
-    margin-top: 5%;
-  }
-
-  &__deck-button {
-    margin-bottom: 10%;
-  }
-
-  &__delete-button {
-    background-color: red;
-    color: white;
-  }
+  margin-top: 5%;
 }

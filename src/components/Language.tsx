@@ -1,3 +1,4 @@
+import { Form, Button, Stack } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import languages from '../data/languages';
@@ -41,14 +42,15 @@ const Language = ({
   };
   const peekLanguageElement = filterLangs.map((language, index) => {
     return (
-      <button
-        className="language__peek-language"
+      <Button
+        variant="light"
         onClick={(e) => handleOnPeekLangButtonClick(e, language)}
         key={index}
         type="button"
+        className="language__peek-language"
       >
         {language}
-      </button>
+      </Button>
     );
   });
   const handleOnChangeLang = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -94,19 +96,18 @@ const Language = ({
   };
   return (
     <section className="language">
-      <section className="language__container">
+      <Stack>
         <section className="language__language">
           <label className="language__label" htmlFor="language">
             Choose language:
           </label>
           <section className="language__peek">
-            <input
+            <Form.Control
               onChange={handleOnChangeLang}
               onFocus={(e) => setLanguageFocused(true)}
               id="language"
               name="language"
               value={language}
-              className="language__input"
             />
             {languageFocused && (
               <section className="language__peek-languages">
@@ -119,21 +120,17 @@ const Language = ({
           <label className="language__label" htmlFor="language">
             Enter text:
           </label>
-          <input
+          <Form.Control
             onChange={handleOnChangeText}
             id="language"
             name="language"
             value={text}
-            className="language__input"
-          ></input>
+          />
         </section>
-        <button
-          className="language__delete-button"
-          onClick={handleOnDeleteLangButtonClick}
-        >
+        <Button variant="danger" onClick={handleOnDeleteLangButtonClick}>
           X
-        </button>
-      </section>
+        </Button>
+      </Stack>
     </section>
   );
 };
