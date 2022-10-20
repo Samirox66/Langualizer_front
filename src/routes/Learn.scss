@@ -1,0 +1,12 @@
+.learn {
+  &__container {
+    margin-left: 10%;
+    margin-top: 3%;
+    width: 40%;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+}
