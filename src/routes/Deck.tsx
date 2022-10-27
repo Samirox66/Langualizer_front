@@ -53,6 +53,9 @@ const Deck = () => {
     }
     setAllLanguages(!allLanguages);
   };
+  if (currentPhraseIndex >= deck.phrases.length && currentPhraseIndex != 0) {
+    setCurrentPhraseIndex((prev) => prev - 1);
+  }
 
   const phrase = (
     <Phrase
@@ -61,6 +64,7 @@ const Deck = () => {
       notFilteredLanguages={filterLanguages
         .filter((language) => !language.checked)
         .map((language) => language.language)}
+      deckPhrasesLength={deck.phrases.length}
     />
   );
 
