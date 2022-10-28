@@ -7,6 +7,7 @@ import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { Button, Stack } from 'react-bootstrap';
 import './Deck.scss';
+import axios from '../api/axios';
 
 const Deck = () => {
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
@@ -20,7 +21,8 @@ const Deck = () => {
   const deck = useAppSelector((state) => {
     return state.decks.decks.find((phrase) => phrase.name == deckName);
   });
-  if (!deck || !deckName) {
+  const email = useAppSelector((state) => state.user.email);
+  if (!deck || !deckName || !email) {
     return <div>No such deck</div>;
   }
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,6 +113,20 @@ const Deck = () => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
+    axios
+      .put(`/home/publish/${email}/${deckName}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        if (error.response) console.log(error.response.data);
+        else console.log(error);
+      });
   };
 
   const handlePrevPhraseButtonClick = (
