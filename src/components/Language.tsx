@@ -108,6 +108,7 @@ const Language = ({
               id="language"
               name="language"
               value={language}
+              className="language__input-lang"
             />
             {languageFocused && (
               <section className="language__peek-languages">
@@ -125,6 +126,8 @@ const Language = ({
             id="language"
             name="language"
             value={text}
+            as="textarea"
+            className="language__input-text"
           />
         </section>
         <Button variant="danger" onClick={handleOnDeleteLangButtonClick}>

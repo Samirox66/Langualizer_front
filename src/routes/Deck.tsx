@@ -5,11 +5,12 @@ import Phrase from '../components/Phrase';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
-import { Button, Stack } from 'react-bootstrap';
+import { Button, Dropdown, Form, Stack } from 'react-bootstrap';
 import './Deck.scss';
 import axios from '../api/axios';
 
 const Deck = () => {
+  const [filterLanguageRgx, setFilterLanguageRgx] = useState('');
   const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [filterLanguages, setFilterLanguages] = useState(
     languages.map((language) => {
@@ -72,8 +73,9 @@ const Deck = () => {
 
   const languagesElements = filterLanguages.map((language) => {
     return (
-      <>
+      <Stack direction="horizontal" gap={1}>
         <input
+          className="deck__filter-checkbox"
           checked={language.checked}
           onChange={handleOnLanguageChange}
           type="checkbox"
@@ -84,12 +86,13 @@ const Deck = () => {
         <label className="deck__filter-language" htmlFor={language.language}>
           {language.language}
         </label>
-      </>
+      </Stack>
     );
   });
   languagesElements.push(
-    <>
+    <Stack direction="horizontal" gap={1}>
       <input
+        className="deck__filter-checkbox"
         checked={allLanguages}
         onChange={handleOnAllLanguagesChange}
         type="checkbox"
@@ -98,7 +101,7 @@ const Deck = () => {
         value="All"
       />
       <label htmlFor="All">All</label>
-    </>
+    </Stack>
   );
   const dispatch = useAppDispatch();
   const handleOnAddPhraseButtonClick = (
@@ -163,13 +166,19 @@ const Deck = () => {
           <Button variant="info" onClick={handlePrevPhraseButtonClick}>
             prev
           </Button>
+          <p className="deck__index">
+            {currentPhraseIndex + 1}/{deck.phrases.length}
+          </p>
           <Button variant="info" onClick={handleNextPhraseButtonClick}>
             next
           </Button>
+          <Dropdown>
+            <Dropdown.Toggle as="input" id="filter-languages" value={2} />
+            <Dropdown.Menu>
+              <Stack gap={1}>{languagesElements}</Stack>
+            </Dropdown.Menu>
+          </Dropdown>
         </Stack>
-        <section className="deck__filter-languages">
-          {languagesElements}
-        </section>
         {phrase}
       </section>
     </section>

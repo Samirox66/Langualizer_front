@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Stack } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { decksActions, ILanguage } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -56,17 +56,24 @@ const Phrase = ({
   return (
     <section className="phrase">
       <section className="phrase__container">
-        <Button onClick={handleOnAddLangButtonClick} variant="success">
-          Add translation
-        </Button>
+        <Stack gap={2} direction="horizontal">
+          <Button
+            size="lg"
+            onClick={handleOnAddLangButtonClick}
+            variant="success"
+          >
+            Add translation
+          </Button>
+          <Button
+            size="lg"
+            disabled={deckPhrasesLength == 1}
+            onClick={handleOnDeletePhraseButtonClick}
+            variant="danger"
+          >
+            Delete phrase
+          </Button>
+        </Stack>
         {phraseElements}
-        <Button
-          disabled={deckPhrasesLength == 1}
-          onClick={handleOnDeletePhraseButtonClick}
-          variant="danger"
-        >
-          X
-        </Button>
       </section>
     </section>
   );

@@ -243,6 +243,6 @@ const decksSlice = createSlice({
   },
 });
 
-export { ILanguage, loadDecksFromDb };
+export { ILanguage, loadDecksFromDb, IDeck };
 export const decksActions = decksSlice.actions;
 export default decksSlice;
