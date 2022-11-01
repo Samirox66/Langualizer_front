@@ -26,6 +26,16 @@ const Deck = () => {
   if (!deck || !deckName || !email) {
     return <div>No such deck</div>;
   }
+
+  if (allLanguages) {
+    filterLanguages.forEach((filterLanguage) => {
+      if (!filterLanguage.checked) {
+        setAllLanguages(false);
+        return;
+      }
+    });
+  }
+
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterLanguages(
       filterLanguages.map((language) => {
@@ -71,10 +81,13 @@ const Deck = () => {
     />
   );
 
-  const languagesElements = filterLanguages.map((language) => {
-    return (
-      <Stack direction="horizontal" gap={1}>
-        <input
+  const languagesElements = filterLanguages
+    .filter((language) =>
+      language.language.toLowerCase().includes(filterLanguageRgx.toLowerCase())
+    )
+    .map((language) => {
+      return (
+        <Form.Check
           className="deck__filter-checkbox"
           checked={language.checked}
           onChange={handleOnLanguageChange}
@@ -82,26 +95,21 @@ const Deck = () => {
           name="filter"
           id={language.language}
           value={language.language}
+          label={language.language}
         />
-        <label className="deck__filter-language" htmlFor={language.language}>
-          {language.language}
-        </label>
-      </Stack>
-    );
-  });
+      );
+    });
   languagesElements.push(
-    <Stack direction="horizontal" gap={1}>
-      <input
-        className="deck__filter-checkbox"
-        checked={allLanguages}
-        onChange={handleOnAllLanguagesChange}
-        type="checkbox"
-        name="filter"
-        id="All"
-        value="All"
-      />
-      <label htmlFor="All">All</label>
-    </Stack>
+    <Form.Check
+      className="deck__filter-checkbox"
+      checked={allLanguages}
+      onChange={handleOnAllLanguagesChange}
+      type="checkbox"
+      name="filter"
+      id="All"
+      value="All"
+      label="All"
+    />
   );
   const dispatch = useAppDispatch();
   const handleOnAddPhraseButtonClick = (
@@ -173,9 +181,15 @@ const Deck = () => {
             next
           </Button>
           <Dropdown>
-            <Dropdown.Toggle as="input" id="filter-languages" value={2} />
+            <Dropdown.Toggle
+              as="input"
+              id="filter-languages"
+              value={filterLanguageRgx}
+              onChange={(e) => setFilterLanguageRgx(e.currentTarget.value)}
+              className="deck__filter-languages"
+            />
             <Dropdown.Menu>
-              <Stack gap={1}>{languagesElements}</Stack>
+              <Form className="deck__menu">{languagesElements}</Form>
             </Dropdown.Menu>
           </Dropdown>
         </Stack>

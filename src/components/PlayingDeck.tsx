@@ -43,6 +43,15 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
     setShowRightAnswer(true);
   };
 
+  let answerClassName = '';
+  if (showRightAnswer) {
+    if (translation == rightTranslation) {
+      answerClassName = 'playing-deck__right-translation';
+    } else {
+      answerClassName = 'playing-deck__wrong-translation';
+    }
+  }
+
   return (
     <Stack gap={3} className="playing-deck">
       <p className="playing-deck__lang">{firstLang}:</p>
@@ -57,10 +66,12 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
       <Form.Control
         value={translation}
         onChange={(e) => setTranslation(e.currentTarget.value)}
-        className="playing-deck__input"
+        className={answerClassName}
+        disabled={showRightAnswer}
       />
       {showRightAnswer ? (
         <>
+          <p className="playing-deck__lang">Answer:</p>
           <p>{rightTranslation}</p>
           <Button
             onClick={() => {

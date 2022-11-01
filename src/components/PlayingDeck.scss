@@ -4,6 +4,11 @@
     font-size: 24px;
   }
 
-  &__text {
+  &__right-translation {
+    color: green;
+  }
+
+  &__wrong-translation {
+    color: red;
   }
 }

@@ -76,7 +76,9 @@ const Play = () => {
         {!isPlaying ? (
           <Form onClick={handleOnStartButtonClick}>
             <Form.Group className="mb-3" controlId="firstPlayingLanguage">
-              <Form.Label>Choose first language:</Form.Label>
+              <Form.Label className="language__label">
+                Choose first language:
+              </Form.Label>
               <section className="language__peek">
                 <Form.Control
                   onChange={(e) => handleOnChangeLang(e, true)}

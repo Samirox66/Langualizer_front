@@ -10,9 +10,8 @@
   }
 
   &__filter-languages {
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
   }
 
   &__filter-language {
@@ -23,5 +22,9 @@
     margin: 0;
     text-align: center;
     font-size: large;
+  }
+
+  &__menu {
+    padding-left: 7%;
   }
 }
