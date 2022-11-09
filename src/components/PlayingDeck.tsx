@@ -69,7 +69,7 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
         className={answerClassName}
         disabled={showRightAnswer}
       />
-      {showRightAnswer ? (
+      {answerClassName && showRightAnswer ? (
         <>
           <p className="playing-deck__lang">Answer:</p>
           <p>{rightTranslation}</p>
