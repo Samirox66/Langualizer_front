@@ -34,6 +34,8 @@ const Deck = () => {
         return;
       }
     });
+  } else if (!filterLanguages.find((language) => !language.checked)) {
+    setAllLanguages(true);
   }
 
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {

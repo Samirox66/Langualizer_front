@@ -2,4 +2,26 @@
   &__button {
     width: 10%;
   }
+
+  &__label {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  &__save-button {
+    width: 20%;
+  }
+
+  &__stack-fix {
+    flex: none;
+    margin-right: 15%;
+  }
+
+  &__translation {
+    justify-content: flex-start;
+  }
+
+  &__text {
+    font-size: 16px;
+  }
 }

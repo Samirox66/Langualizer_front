@@ -12,6 +12,7 @@ interface IDeck {
   phrases: Array<Array<ILanguage>>;
   published: boolean;
   visible: boolean;
+  id: string | undefined;
 }
 
 interface INewDeckAction {
@@ -78,6 +79,13 @@ interface IFilterDecksAction {
   };
 }
 
+interface ISaveSharedDeckAction {
+  type: string;
+  payload: {
+    deck: IDeck;
+  };
+}
+
 const loadDecksFromDb = createAsyncThunk(
   'decks/save',
   async (email: string) => {
@@ -122,6 +130,7 @@ const decksSlice = createSlice({
         phrases: [[{ text: '', language: '', key: state.key }]],
         published: false,
         visible: true,
+        id: undefined,
       });
       ++state.key;
     },
@@ -223,6 +232,9 @@ const decksSlice = createSlice({
         })
         .then((response) => console.log(response.data))
         .catch((err) => console.log(err));
+    },
+    saveSharedDeck(state, action: ISaveSharedDeckAction) {
+      state.decks.push(action.payload.deck);
     },
     clearState(state) {
       state.decks.length = 0;

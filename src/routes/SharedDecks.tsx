@@ -25,14 +25,7 @@ const SharedDecks = () => {
   }, []);
 
   const publishedDecks = decks.map((deck, index) => {
-    return (
-      <SharedDeck
-        key={index}
-        description={deck.description}
-        name={deck.name}
-        phrase={deck.phrases[0]}
-      />
-    );
+    return <SharedDeck key={index} deck={deck} />;
   });
 
   return (
@@ -48,3 +41,4 @@ const SharedDecks = () => {
 };
 
 export default SharedDecks;
+export { ISharedDeck };
