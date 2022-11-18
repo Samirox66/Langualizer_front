@@ -1,3 +1,4 @@
+import { Button, Form } from 'react-bootstrap';
 import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -50,50 +51,43 @@ const SignUp = () => {
     <main className="sign-up">
       <section className="sign-up__container">
         <h1 className="sing-up__title">Registration</h1>
-        <form className="sign-up__form" onSubmit={handleOnSubmit}>
-          <label className="sign-up__label" htmlFor="username">
-            Username:
-          </label>
-          <input
-            className="sign_up__input"
-            id="username"
-            type="text"
-            value={username}
-            autoComplete="off"
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-          <label className="sign-up__label" htmlFor="email">
-            Email:
-          </label>
-          <input
-            className="sign-up__input"
-            id="email"
-            type="email"
-            value={email}
-            autoComplete="off"
-            onChange={(e) => {
-              setEmail(e.target.value);
-            }}
-          />
-          <label className="sign-up__label" htmlFor="password">
-            Password:
-          </label>
-          <input
-            className="sign-up__input"
-            id="password"
-            type="password"
-            value={password}
-            autoComplete="off"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <button>Sing up</button>
-        </form>
-        <p>Already signed in?</p>
-        <Link to="/login">Sign up</Link>
+        <Form onSubmit={handleOnSubmit}>
+          <Form.Group className="mb-3" controlId="signUpUsername">
+            <Form.Label>Username:</Form.Label>
+            <Form.Control
+              type="text"
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="signUpEmail">
+            <Form.Label>Email:</Form.Label>
+            <Form.Control
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="signUpPassword">
+            <Form.Label>Password:</Form.Label>
+            <Form.Control
+              type="password"
+              value={password}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+          </Form.Group>
+          <Button type="submit">Sing up</Button>
+        </Form>
+        <p className="sign-up__text">Already signed in?</p>
+        <Link className="sign-up__link" to="/login">
+          Sign in
+        </Link>
       </section>
     </main>
   );

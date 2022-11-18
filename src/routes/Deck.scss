@@ -1,24 +1,30 @@
 .deck {
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   &__container {
+    margin-top: 3%;
     width: 90%;
   }
 
-  &__actions {
-    margin-top: 20px;
-    width: 10%;
-    display: flex;
-    justify-content: space-between;
-  }
-
   &__filter-languages {
-    margin-top: 20px;
-    width: 100%;
-    display: flex;
+    border-radius: 5px;
+    border: 1px solid #ced4da;
   }
 
   &__filter-language {
     margin-right: 2%;
+  }
+
+  &__index {
+    margin: 0;
+    text-align: center;
+    font-size: large;
+  }
+
+  &__menu {
+    padding-left: 7%;
   }
 }

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import PlayingDeck from '../components/PlayingDeck';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
@@ -28,22 +30,20 @@ const Play = () => {
   const createPeekLanguages = (isFirst: boolean) => {
     return filterLangs.map((language, index) => {
       return (
-        <button
+        <Button
+          variant="light"
           className="language__peek-language"
           onClick={(e) => handleOnPeekLangButtonClick(e, language, isFirst)}
           key={index}
           type="button"
         >
           {language}
-        </button>
+        </Button>
       );
     });
   };
 
-  const handleOnChangeLang = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    isFirst: boolean
-  ) => {
+  const handleOnChangeLang = (event, isFirst: boolean) => {
     if (isFirst) {
       setFirstLang({
         focused: firstLang.focused,
@@ -57,17 +57,14 @@ const Play = () => {
     }
   };
 
-  const handleOnStartButtonClick = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleOnStartButtonClick = (event) => {
     event.preventDefault();
-    console.log(firstLang.focused, secondLang.focused);
-
     if (
       !firstLang.focused &&
       !secondLang.focused &&
       firstLang.value != '' &&
-      secondLang.value! + ''
+      secondLang.value! + '' &&
+      firstLang.value != secondLang.value
     ) {
       setIsPlaying(true);
     }
@@ -77,32 +74,33 @@ const Play = () => {
     <main className="play">
       <section className="play__container">
         {!isPlaying ? (
-          <section className="play__choose">
-            <label className="language__label" htmlFor="language">
-              Choose first language:
-            </label>
-            <section className="language__peek">
-              <input
-                onChange={(e) => handleOnChangeLang(e, true)}
-                onFocus={(e) =>
-                  setFirstLang({ focused: true, value: firstLang.value })
-                }
-                id="language"
-                name="language"
-                value={firstLang.value}
-                className="language__input"
-              />
-              {firstLang.focused && (
-                <section className="language__peek-languages">
-                  {createPeekLanguages(true)}
-                </section>
-              )}
-            </section>
+          <Form onClick={handleOnStartButtonClick}>
+            <Form.Group className="mb-3" controlId="firstPlayingLanguage">
+              <Form.Label className="language__label">
+                Choose first language:
+              </Form.Label>
+              <section className="language__peek">
+                <Form.Control
+                  onChange={(e) => handleOnChangeLang(e, true)}
+                  onFocus={(e) =>
+                    setFirstLang({ focused: true, value: firstLang.value })
+                  }
+                  id="language"
+                  name="language"
+                  value={firstLang.value}
+                />
+                {firstLang.focused && (
+                  <section className="language__peek-languages">
+                    {createPeekLanguages(true)}
+                  </section>
+                )}
+              </section>
+            </Form.Group>
             <label className="language__label" htmlFor="language">
               Choose second language:
             </label>
             <section className="language__peek">
-              <input
+              <Form.Control
                 onChange={(e) => handleOnChangeLang(e, false)}
                 onFocus={(e) =>
                   setSecondLang({ focused: true, value: secondLang.value })
@@ -110,7 +108,6 @@ const Play = () => {
                 id="language"
                 name="language"
                 value={secondLang.value}
-                className="language__input"
               />
               {secondLang.focused && (
                 <section className="language__peek-languages">
@@ -118,10 +115,15 @@ const Play = () => {
                 </section>
               )}
             </section>
-            <button onClick={handleOnStartButtonClick}>Start</button>
-          </section>
+            <Button className="play__start-button" variant="primary">
+              Start
+            </Button>
+          </Form>
         ) : (
-          <p>Playing</p>
+          <PlayingDeck
+            firstLang={firstLang.value}
+            secondLang={secondLang.value}
+          />
         )}
       </section>
     </main>

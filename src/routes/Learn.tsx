@@ -1,3 +1,4 @@
+import { Form, Button, Stack } from 'react-bootstrap';
 import React from 'react';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
@@ -32,34 +33,35 @@ const Learn = () => {
     <section className="learn">
       <section className="learn__container">
         <section className="learn__buttons">
-          <form onSubmit={handleOnAddDeck} className="learn__new-deck-from">
-            <label className="learn__label" htmlFor="newDeck">
-              New deck name:
-            </label>
-            <input
-              id="newDeck"
-              className="learn__new-deck-input"
-              value={newDeck}
-              type="text"
-              onChange={(e) => {
-                setNewDeck(e.target.value);
-              }}
-            />
-            <button>Add deck</button>
-          </form>
-          <form className="learn__search-form">
-            <label className="learn__label" htmlFor="searchDeck">
-              Search:
-            </label>
-            <input
-              id="searchDeck"
-              className="learn__find-deck"
-              onChange={handleOnSearchDeckChange}
-            />
-          </form>
-          <form onSubmit={handleOnSaveDecks}>
-            <button>Save decks</button>
-          </form>
+          <Form onSubmit={handleOnAddDeck}>
+            <Form.Group className="mb-3" controlId="newDeck">
+              <Form.Label>New deck name:</Form.Label>
+              <Form.Control
+                value={newDeck}
+                type="text"
+                onChange={(e) => {
+                  setNewDeck(e.target.value);
+                }}
+              />
+            </Form.Group>
+            <Button type="submit" variant="primary">
+              Add deck
+            </Button>
+          </Form>
+          <Form>
+            <Form.Group className="mb-3" controlId="searchDeck">
+              <Form.Label>Search:</Form.Label>
+              <Form.Control onChange={handleOnSearchDeckChange} />
+            </Form.Group>
+          </Form>
+          <Form onSubmit={handleOnSaveDecks}>
+            <Stack>
+              <Form.Label>Save decks:</Form.Label>
+              <Button variant="primary" type="submit">
+                &#10003;
+              </Button>
+            </Stack>
+          </Form>
         </section>
         <Decks />
       </section>

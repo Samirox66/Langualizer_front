@@ -1,0 +1,14 @@
+.playing-deck {
+  &__lang {
+    font-weight: bold;
+    font-size: 24px;
+  }
+
+  &__right-translation {
+    color: green;
+  }
+
+  &__wrong-translation {
+    color: red;
+  }
+}

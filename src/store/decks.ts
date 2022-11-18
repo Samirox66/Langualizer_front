@@ -143,10 +143,12 @@ const decksSlice = createSlice({
       ++state.key;
     },
     deleteLang(state, action: IDeleteLangAction) {
+      console.log(action.payload);
+
       const { deckName, langIndex, phraseIndex } = action.payload;
-      const lang = state.decks.find((deck) => deck.name == deckName)?.phrases[
-        phraseIndex
-      ][langIndex];
+      const lang = state.decks
+        .find((deck) => deck.name == deckName)
+        ?.phrases[phraseIndex].find((lang) => lang.key == langIndex);
       if (lang == undefined) {
         return;
       }
@@ -200,8 +202,6 @@ const decksSlice = createSlice({
     },
     changeText(state, action: IChangeAction) {
       const { deckName, phraseIndex, langIndex, changedValue } = action.payload;
-      console.log(deckName, phraseIndex, langIndex, changedValue);
-
       const lang = state.decks
         .find((deck) => deck.name == deckName)
         ?.phrases.at(phraseIndex)
@@ -231,12 +231,18 @@ const decksSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(loadDecksFromDb.fulfilled, (state, action) => {
       action.payload.forEach((deck) => {
+        deck.phrases = deck.phrases.map((phrase) => {
+          return phrase.map((lang) => {
+            return { ...lang, key: state.key++ };
+          });
+        });
+
         state.decks.push({ ...deck, visible: true });
       });
     });
   },
 });
 
-export { ILanguage, loadDecksFromDb };
+export { ILanguage, loadDecksFromDb, IDeck };
 export const decksActions = decksSlice.actions;
 export default decksSlice;

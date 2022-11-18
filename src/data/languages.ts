@@ -1,3 +1,11 @@
-const languages = ['Russian', 'English', 'Spanish'];
+const languages = [
+  'Russian',
+  'English',
+  'Spanish',
+  'Azerbaijani',
+  'French',
+  'Germany',
+  'Italy',
+];
 
 export default languages;

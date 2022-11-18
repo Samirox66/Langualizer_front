@@ -1,7 +1,8 @@
 import React from 'react';
+import { Button, Stack } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { decksActions, ILanguage } from '../store/decks';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import Language from './Language';
 import './Phrase.scss';
 
@@ -9,14 +10,20 @@ interface IPhraseProps {
   phrase: Array<ILanguage>;
   phraseIndex: number;
   notFilteredLanguages: Array<string>;
+  deckPhrasesLength: number;
 }
 
 const Phrase = ({
   phrase,
   phraseIndex,
   notFilteredLanguages,
+  deckPhrasesLength,
 }: IPhraseProps) => {
   const { deckName } = useParams();
+  if (!deckName) {
+    return <div>No such deck</div>;
+  }
+
   const phraseElements = phrase
     .filter((language) => !notFilteredLanguages.includes(language.language))
     .map((language) => {
@@ -24,7 +31,7 @@ const Phrase = ({
         <Language
           language={language.language}
           text={language.text}
-          key={phraseIndex}
+          key={language.key}
           phraseIndex={phraseIndex}
           langIndex={language.key}
         />
@@ -36,36 +43,37 @@ const Phrase = ({
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    if (deckName) {
-      dispatch(decksActions.addNewLang({ deckName: deckName, phraseIndex }));
-    }
+    dispatch(decksActions.addNewLang({ deckName: deckName, phraseIndex }));
   };
 
   const handleOnDeletePhraseButtonClick = (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {
     event.preventDefault();
-    if (deckName) {
-      dispatch(decksActions.deletePhrase({ deckName, phraseIndex }));
-    }
+    dispatch(decksActions.deletePhrase({ deckName, phraseIndex }));
   };
 
   return (
     <section className="phrase">
       <section className="phrase__container">
-        <button
-          onClick={handleOnAddLangButtonClick}
-          className="phrase__add-lang-button"
-        >
-          Add language
-        </button>
+        <Stack gap={2} direction="horizontal">
+          <Button
+            size="lg"
+            onClick={handleOnAddLangButtonClick}
+            variant="success"
+          >
+            Add translation
+          </Button>
+          <Button
+            size="lg"
+            disabled={deckPhrasesLength == 1}
+            onClick={handleOnDeletePhraseButtonClick}
+            variant="danger"
+          >
+            Delete phrase
+          </Button>
+        </Stack>
         {phraseElements}
-        <button
-          className="phrase__delete-button"
-          onClick={handleOnDeletePhraseButtonClick}
-        >
-          X
-        </button>
       </section>
     </section>
   );

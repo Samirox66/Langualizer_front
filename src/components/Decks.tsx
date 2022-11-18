@@ -1,3 +1,4 @@
+import { Button, Stack } from 'react-bootstrap';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { decksActions } from '../store/decks';
@@ -20,24 +21,19 @@ const Decks = () => {
         dispatch(decksActions.deleteDeck(deck.name));
       };
       return (
-        <section className="decks__deck" key={index}>
+        <Stack direction="horizontal" gap={2} key={index}>
           <Link to={`/deck/${deck.name}`}>
-            <button className="decks__deck-button">
-              {deck.name.toUpperCase()}
-            </button>
+            <Button variant="success">{deck.name.toUpperCase()}</Button>
           </Link>
-          <button
-            onClick={handleOnDeleteDeckButtonClick}
-            className="decks__delete-button"
-          >
+          <Button onClick={handleOnDeleteDeckButtonClick} variant="danger">
             X
-          </button>
-        </section>
+          </Button>
+        </Stack>
       );
     });
   return (
     <section className="decks">
-      <section className="decks__container">{decksElements}</section>
+      <Stack gap={3}>{decksElements}</Stack>
     </section>
   );
 };

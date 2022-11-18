@@ -5,9 +5,13 @@ import Phrase from '../components/Phrase';
 import languages from '../data/languages';
 import { decksActions } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
+import { Button, Dropdown, Form, Stack } from 'react-bootstrap';
 import './Deck.scss';
+import axios from '../api/axios';
 
 const Deck = () => {
+  const [filterLanguageRgx, setFilterLanguageRgx] = useState('');
+  const [currentPhraseIndex, setCurrentPhraseIndex] = useState(0);
   const [filterLanguages, setFilterLanguages] = useState(
     languages.map((language) => {
       return { language, checked: true };
@@ -18,6 +22,19 @@ const Deck = () => {
   const deck = useAppSelector((state) => {
     return state.decks.decks.find((phrase) => phrase.name == deckName);
   });
+  const email = useAppSelector((state) => state.user.email);
+  if (!deck || !deckName || !email) {
+    return <div>No such deck</div>;
+  }
+
+  if (allLanguages) {
+    filterLanguages.forEach((filterLanguage) => {
+      if (!filterLanguage.checked) {
+        setAllLanguages(false);
+        return;
+      }
+    });
+  }
 
   const handleOnLanguageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFilterLanguages(
@@ -49,73 +66,134 @@ const Deck = () => {
     }
     setAllLanguages(!allLanguages);
   };
+  if (currentPhraseIndex >= deck.phrases.length && currentPhraseIndex != 0) {
+    setCurrentPhraseIndex((prev) => prev - 1);
+  }
 
-  const deckPhrases = deck?.phrases?.map((phrase, index) => {
-    return (
-      <Phrase
-        phrase={phrase}
-        key={index}
-        phraseIndex={index}
-        notFilteredLanguages={filterLanguages
-          .filter((language) => !language.checked)
-          .map((language) => language.language)}
-      />
-    );
-  });
+  const phrase = (
+    <Phrase
+      phrase={deck.phrases[currentPhraseIndex]}
+      phraseIndex={currentPhraseIndex}
+      notFilteredLanguages={filterLanguages
+        .filter((language) => !language.checked)
+        .map((language) => language.language)}
+      deckPhrasesLength={deck.phrases.length}
+    />
+  );
 
-  const languagesElements = filterLanguages.map((language) => {
-    return (
-      <>
-        <input
+  const languagesElements = filterLanguages
+    .filter((language) =>
+      language.language.toLowerCase().includes(filterLanguageRgx.toLowerCase())
+    )
+    .map((language) => {
+      return (
+        <Form.Check
+          className="deck__filter-checkbox"
           checked={language.checked}
           onChange={handleOnLanguageChange}
           type="checkbox"
           name="filter"
           id={language.language}
           value={language.language}
+          label={language.language}
         />
-        <label className="deck__filter-language" htmlFor={language.language}>
-          {language.language}
-        </label>
-      </>
-    );
-  });
+      );
+    });
   languagesElements.push(
-    <>
-      <input
-        checked={allLanguages}
-        onChange={handleOnAllLanguagesChange}
-        type="checkbox"
-        name="filter"
-        id="All"
-        value="All"
-      />
-      <label htmlFor="All">All</label>
-    </>
+    <Form.Check
+      className="deck__filter-checkbox"
+      checked={allLanguages}
+      onChange={handleOnAllLanguagesChange}
+      type="checkbox"
+      name="filter"
+      id="All"
+      value="All"
+      label="All"
+    />
   );
   const dispatch = useAppDispatch();
   const handleOnAddPhraseButtonClick = (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    if (deckName) {
-      dispatch(decksActions.addNewPhrase(deckName));
-    }
+    dispatch(decksActions.addNewPhrase(deckName));
+    setCurrentPhraseIndex(deck.phrases.length);
+  };
+
+  const handleOnPublishDeckButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    axios
+      .put(`/home/publish/${email}/${deckName}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        if (error.response) console.log(error.response.data);
+        else console.log(error);
+      });
+  };
+
+  const handlePrevPhraseButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setCurrentPhraseIndex((prev) => {
+      return (prev + deck?.phrases.length - 1) % deck?.phrases.length;
+    });
+  };
+
+  const handleNextPhraseButtonClick = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setCurrentPhraseIndex((prev) => {
+      return (prev + 1) % deck?.phrases.length;
+    });
   };
 
   return (
     <section className="deck">
       <section className="deck__container">
-        <section className="deck__actions">
-          <button onClick={handleOnAddPhraseButtonClick}>Add phrase</button>
+        <Stack direction="horizontal" gap={3}>
+          <Button variant="primary" onClick={handleOnAddPhraseButtonClick}>
+            Add phrase
+          </Button>
           <Link to={`play`}>
-            <button type="button">Play</button>
+            <Button>Play</Button>
           </Link>
-        </section>
-        <section className="deck__filter-languages">
-          {languagesElements}
-        </section>
-        {deckPhrases}
+          <Button variant="primary" onClick={handleOnPublishDeckButtonClick}>
+            Publish Deck
+          </Button>
+          <Button variant="info" onClick={handlePrevPhraseButtonClick}>
+            prev
+          </Button>
+          <p className="deck__index">
+            {currentPhraseIndex + 1}/{deck.phrases.length}
+          </p>
+          <Button variant="info" onClick={handleNextPhraseButtonClick}>
+            next
+          </Button>
+          <Dropdown>
+            <Dropdown.Toggle
+              as="input"
+              id="filter-languages"
+              value={filterLanguageRgx}
+              onChange={(e) => setFilterLanguageRgx(e.currentTarget.value)}
+              className="deck__filter-languages"
+            />
+            <Dropdown.Menu>
+              <Form className="deck__menu">{languagesElements}</Form>
+            </Dropdown.Menu>
+          </Dropdown>
+        </Stack>
+        {phrase}
       </section>
     </section>
   );
