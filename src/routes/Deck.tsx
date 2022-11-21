@@ -187,6 +187,7 @@ const Deck = () => {
               as="input"
               id="filter-languages"
               value={filterLanguageRgx}
+              placeholder="filter languages"
               onChange={(e) => setFilterLanguageRgx(e.currentTarget.value)}
               className="deck__filter-languages"
             />

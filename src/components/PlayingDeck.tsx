@@ -11,6 +11,7 @@ interface IPlayingDeckProp {
 
 const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
   const [showRightAnswer, setShowRightAnswer] = useState(false);
+  const [answerClassName, setAnswerClassName] = useState('');
 
   const { deckName } = useParams();
   if (!deckName) {
@@ -40,17 +41,15 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    setShowRightAnswer(true);
-  };
+    console.log(translation, rightTranslation);
 
-  let answerClassName = '';
-  if (showRightAnswer) {
     if (translation == rightTranslation) {
-      answerClassName = 'playing-deck__right-translation';
+      setAnswerClassName('playing-deck__right-translation');
+      setShowRightAnswer(true);
     } else {
-      answerClassName = 'playing-deck__wrong-translation';
+      setAnswerClassName('playing-deck__wrong-translation');
     }
-  }
+  };
 
   return (
     <Stack gap={3} className="playing-deck">
@@ -69,7 +68,40 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
         className={answerClassName}
         disabled={showRightAnswer}
       />
-      {answerClassName && showRightAnswer ? (
+      {!showRightAnswer ? (
+        <>
+          <Button onClick={handleCheckTranslationButtonClick}>Check</Button>
+          {answerClassName == 'playing-deck__wrong-translation' && (
+            <Button
+              onClick={(e) => {
+                e.preventDefault();
+                setShowRightAnswer(true);
+              }}
+            >
+              Show right answer
+            </Button>
+          )}
+        </>
+      ) : (
+        <>
+          {answerClassName == 'playing-deck__wrong-translation' && (
+            <>
+              <p className="playing-deck__lang">Answer:</p>
+              <p>{rightTranslation}</p>
+            </>
+          )}
+          <Button
+            onClick={() => {
+              setCurrentPhraseIndex((prev) => (prev + 1) % deck.phrases.length);
+              setShowRightAnswer(false);
+              setTranslation('');
+            }}
+          >
+            Next
+          </Button>
+        </>
+      )}
+      {/* {answerClassName && showRightAnswer ? (
         <>
           <p className="playing-deck__lang">Answer:</p>
           <p>{rightTranslation}</p>
@@ -85,7 +117,7 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
         </>
       ) : (
         <Button onClick={handleCheckTranslationButtonClick}>Check</Button>
-      )}
+      )} */}
     </Stack>
   );
 };
