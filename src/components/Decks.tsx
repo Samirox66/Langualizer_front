@@ -1,13 +1,14 @@
 import { Button, Modal, Stack } from 'react-bootstrap';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { decksActions } from '../store/decks';
+import { decksActions, deleteDeck } from '../store/decks';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import './Decks.scss';
 
 const Decks = () => {
   const [showDeleteDeckModal, setShowDeleteDeckModal] = useState(false);
   const decks = useAppSelector((state) => state.decks.decks);
+  const email = useAppSelector((state) => state.user.email);
   const dispatch = useAppDispatch();
 
   const handleCloseDeleteDeckModal = () => {
@@ -28,7 +29,7 @@ const Decks = () => {
       ) => {
         e.preventDefault();
         setShowDeleteDeckModal(false);
-        dispatch(decksActions.deleteDeck(deck.name));
+        dispatch(deleteDeck({ deckName: deck.name, email: email }));
       };
 
       return (

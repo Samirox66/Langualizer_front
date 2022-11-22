@@ -101,23 +101,6 @@ const PlayingDeck = ({ firstLang, secondLang }: IPlayingDeckProp) => {
           </Button>
         </>
       )}
-      {/* {answerClassName && showRightAnswer ? (
-        <>
-          <p className="playing-deck__lang">Answer:</p>
-          <p>{rightTranslation}</p>
-          <Button
-            onClick={() => {
-              setCurrentPhraseIndex((prev) => (prev + 1) % deck.phrases.length);
-              setShowRightAnswer(false);
-              setTranslation('');
-            }}
-          >
-            Next
-          </Button>
-        </>
-      ) : (
-        <Button onClick={handleCheckTranslationButtonClick}>Check</Button>
-      )} */}
     </Stack>
   );
 };

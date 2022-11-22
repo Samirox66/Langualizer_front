@@ -20,11 +20,6 @@ interface INewDeckAction {
   payload: string;
 }
 
-interface IDeleteDeckAction {
-  type: string;
-  payload: string;
-}
-
 interface INewPhraseAction {
   type: string;
   payload: string;
@@ -101,6 +96,25 @@ const loadDecksFromDb = createAsyncThunk(
   }
 );
 
+const deleteDeck = createAsyncThunk(
+  'decks/delete',
+  async ({ email, deckName }: { email: string; deckName: string }) => {
+    try {
+      const response = await axios.delete(`/home/delete/${email}/${deckName}`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true,
+      });
+      console.log(response.data);
+
+      return { email, deckName };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 interface IState {
   decks: Array<IDeck>;
   key: number;
@@ -133,13 +147,6 @@ const decksSlice = createSlice({
         id: undefined,
       });
       ++state.key;
-    },
-    deleteDeck(state, action: IDeleteDeckAction) {
-      const deck = state.decks.find((deck) => deck.name == action.payload);
-      if (deck) {
-        const indexOfDeck = state.decks.indexOf(deck);
-        state.decks.splice(indexOfDeck, 1);
-      }
     },
     addNewLang(state, action: INewLangAction) {
       state.decks
@@ -252,9 +259,18 @@ const decksSlice = createSlice({
         state.decks.push({ ...deck, visible: true });
       });
     });
+    builder.addCase(deleteDeck.fulfilled, (state, action) => {
+      const deck = state.decks.find(
+        (deck) => deck.name == action.payload?.deckName
+      );
+      if (deck) {
+        const indexOfDeck = state.decks.indexOf(deck);
+        state.decks.splice(indexOfDeck, 1);
+      }
+    });
   },
 });
 
-export { ILanguage, loadDecksFromDb, IDeck };
+export { ILanguage, loadDecksFromDb, deleteDeck, IDeck };
 export const decksActions = decksSlice.actions;
 export default decksSlice;
