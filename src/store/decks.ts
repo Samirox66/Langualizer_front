@@ -115,6 +115,35 @@ const deleteDeck = createAsyncThunk(
   }
 );
 
+const saveDeckToDb = createAsyncThunk(
+  'save/deck',
+  async ({ deckName, email }: { deckName: string; email: string }) => {
+    try {
+      const deck = {
+        name: deckName,
+        phrases: [[{ text: '', language: '', key: 0 }]],
+        published: false,
+        visible: true,
+        id: undefined,
+      };
+      const response = await axios.post(
+        '/home/save/deck',
+        { ...deck, email: email },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        }
+      );
+      console.log(response.data);
+      return { deck, id: response.data };
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 interface IState {
   decks: Array<IDeck>;
   key: number;
@@ -137,16 +166,6 @@ const decksSlice = createSlice({
           deck.visible = true;
         }
       });
-    },
-    addNewDeck(state, action: INewDeckAction) {
-      state.decks.push({
-        name: action.payload,
-        phrases: [[{ text: '', language: '', key: state.key }]],
-        published: false,
-        visible: true,
-        id: undefined,
-      });
-      ++state.key;
     },
     addNewLang(state, action: INewLangAction) {
       state.decks
@@ -226,7 +245,7 @@ const decksSlice = createSlice({
         lang.text = changedValue;
       }
     },
-    saveDecksToDb(state, action: IDbDecksAction) {
+    updateDecksInDb(state, action: IDbDecksAction) {
       const decks = state.decks.map((deck) => {
         return { ...deck, email: action.payload.email };
       });
@@ -240,6 +259,7 @@ const decksSlice = createSlice({
         .then((response) => console.log(response.data))
         .catch((err) => console.log(err));
     },
+    saveDeckToDb(state, action) {},
     saveSharedDeck(state, action: ISaveSharedDeckAction) {
       state.decks.push(action.payload.deck);
     },
@@ -268,9 +288,20 @@ const decksSlice = createSlice({
         state.decks.splice(indexOfDeck, 1);
       }
     });
+    builder.addCase(saveDeckToDb.fulfilled, (state, action) => {
+      const deck = action.payload?.deck;
+      const id = action.payload?.id;
+      if (!deck || !id) {
+        return;
+      }
+      deck.id = id;
+      deck.phrases[0][0].key = state.key;
+      state.key++;
+      state.decks.push(deck);
+    });
   },
 });
 
-export { ILanguage, loadDecksFromDb, deleteDeck, IDeck };
+export { ILanguage, loadDecksFromDb, deleteDeck, saveDeckToDb, IDeck };
 export const decksActions = decksSlice.actions;
 export default decksSlice;

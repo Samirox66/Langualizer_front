@@ -1,9 +1,9 @@
-import { Form, Button, Stack } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import React from 'react';
 import { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import Decks from '../components/Decks';
-import { decksActions } from '../store/decks';
+import { decksActions, saveDeckToDb } from '../store/decks';
 import './Learn.scss';
 
 interface IDeckData {
@@ -18,16 +18,13 @@ const Learn = () => {
   const handleOnSearchDeckChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch(decksActions.filterDecks({ deckRegex: e.currentTarget.value }));
   };
-  const handleOnSaveDecks = (e) => {
-    e.preventDefault();
-    dispatch(decksActions.saveDecksToDb({ email }));
-  };
+
   const handleOnAddDeck = (event) => {
     event.preventDefault();
     if (newDeck == '') {
       return;
     }
-    dispatch(decksActions.addNewDeck(newDeck));
+    dispatch(saveDeckToDb({ deckName: newDeck, email }));
   };
   return (
     <section className="learn">
@@ -54,14 +51,14 @@ const Learn = () => {
               <Form.Control onChange={handleOnSearchDeckChange} />
             </Form.Group>
           </Form>
-          <Form onSubmit={handleOnSaveDecks}>
+          {/* <Form onSubmit={handleOnSaveDecks}>
             <Stack>
               <Form.Label>Save decks:</Form.Label>
               <Button variant="primary" type="submit">
                 &#10003;
               </Button>
             </Stack>
-          </Form>
+          </Form> */}
         </section>
         <Decks />
       </section>

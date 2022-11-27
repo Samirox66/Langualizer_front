@@ -15,7 +15,7 @@ const Header = () => {
   const handleOnSignOutClick = (e) => {
     e.preventDefault();
     dispatch(userActions.signOut());
-    dispatch(decksActions.saveDecksToDb({ email }));
+    dispatch(decksActions.updateDecksInDb({ email }));
     dispatch(decksActions.clearState());
     navigate('/login');
   };
