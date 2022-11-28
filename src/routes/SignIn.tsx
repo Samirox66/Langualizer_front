@@ -13,6 +13,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
   const dispatch = useAppDispatch();
 
   const handleOnSubmit = (e) => {
@@ -43,8 +44,12 @@ const SignIn = () => {
         navigate('/');
       })
       .catch((error) => {
-        if (error.response) console.log(error.response.data);
-        else console.log(error);
+        if (error.response) {
+          console.log(error.response.data);
+        } else {
+          console.log(error);
+        }
+        setError(true);
       });
   };
 
@@ -77,6 +82,7 @@ const SignIn = () => {
           <Button variant="primary" type="submit">
             Sing in
           </Button>
+          {error && <p className="sign-in__error">Wrong email or password</p>}
         </Form>
         <p className="sign-in__text">Do not have an account yet?</p>
         <Link className="sign-in__link" to="/register">
