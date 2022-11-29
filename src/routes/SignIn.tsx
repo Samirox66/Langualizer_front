@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
-import { decksActions, loadDecksFromDb } from '../store/decks';
+import { loadDecksFromDb } from '../store/decks';
 import { useAppDispatch } from '../store/hooks';
 import { userActions } from '../store/user';
 
@@ -21,7 +21,6 @@ const SignIn = () => {
     if (!email || !password) {
       return;
     }
-    let decks = null;
     axios
       .post(
         '/login',

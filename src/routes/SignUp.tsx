@@ -11,6 +11,7 @@ import './SignUp.scss';
 
 const SignUp = () => {
   const navigate = useNavigate();
+  const [error, setError] = useState({ has: false, what: '' });
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,8 +43,13 @@ const SignUp = () => {
         navigate('/');
       })
       .catch((error) => {
-        if (error.response) console.log(error.response.data);
-        else console.log(error);
+        if (error.response) {
+          console.log(error.response.data);
+          setError({ has: true, what: error.response.data });
+        } else {
+          console.log(error);
+          setError({ has: true, what: 'Erorr' });
+        }
       });
   };
 
@@ -68,7 +74,7 @@ const SignUp = () => {
               type="email"
               value={email}
               onChange={(e) => {
-                setUsername(e.target.value);
+                setEmail(e.target.value);
               }}
             />
           </Form.Group>
@@ -78,11 +84,12 @@ const SignUp = () => {
               type="password"
               value={password}
               onChange={(e) => {
-                setUsername(e.target.value);
+                setPassword(e.target.value);
               }}
             />
           </Form.Group>
           <Button type="submit">Sing up</Button>
+          {error.has && <p className="sign-up__error">{error.what}</p>}
         </Form>
         <p className="sign-up__text">Already signed in?</p>
         <Link className="sign-up__link" to="/login">
