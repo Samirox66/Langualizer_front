@@ -6,17 +6,28 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import './Decks.scss';
 
 const Decks = () => {
-  const [showDeleteDeckModal, setShowDeleteDeckModal] = useState(false);
   const decks = useAppSelector((state) => state.decks.decks);
   const email = useAppSelector((state) => state.user.email);
+  const initialState: Array<boolean> = [];
+  for (let i = 0; i < decks.length; ++i) {
+    if (decks[i].visible) {
+      initialState.push(false);
+    }
+  }
+  const [showDeleteDeckModal, setShowDeleteDeckModal] = useState(initialState);
   const dispatch = useAppDispatch();
+  console.log(initialState);
 
-  const handleCloseDeleteDeckModal = () => {
-    setShowDeleteDeckModal(false);
+  const handleCloseDeleteDeckModal = (index: number) => {
+    setShowDeleteDeckModal((prev) => {
+      return [...prev.slice(0, index), false, ...prev.slice(index + 1)];
+    });
   };
 
-  const handleShowDeleteDeckModal = () => {
-    setShowDeleteDeckModal(true);
+  const handleShowDeleteDeckModal = (index: number) => {
+    setShowDeleteDeckModal((prev) => {
+      return [...prev.slice(0, index), true, ...prev.slice(index + 1)];
+    });
   };
 
   const decksElements = decks
@@ -28,27 +39,35 @@ const Decks = () => {
         e: React.MouseEvent<HTMLButtonElement>
       ) => {
         e.preventDefault();
-        setShowDeleteDeckModal(false);
+        setShowDeleteDeckModal((prev) => {
+          return [...prev.slice(0, index), false, ...prev.slice(index + 1)];
+        });
         dispatch(deleteDeck({ deckName: deck.name, email: email }));
       };
 
       return (
-        <>
-          <Stack direction="horizontal" gap={2} key={index}>
+        <div key={index}>
+          <Stack direction="horizontal" gap={2}>
             <Link to={`/deck/${deck.name}`}>
               <Button variant="success">{deck.name.toUpperCase()}</Button>
             </Link>
-            <Button onClick={handleShowDeleteDeckModal} variant="danger">
+            <Button
+              onClick={() => handleShowDeleteDeckModal(index)}
+              variant="danger"
+            >
               X
             </Button>
           </Stack>
-          <Modal show={showDeleteDeckModal} onHide={handleCloseDeleteDeckModal}>
+          <Modal
+            show={showDeleteDeckModal[index]}
+            onHide={() => handleCloseDeleteDeckModal(index)}
+          >
             <Modal.Body>
               <Stack>
                 <p>Do you want to delete '{deck.name}' deck?</p>
                 <Stack direction="horizontal" gap={3}>
                   <Button
-                    onClick={handleCloseDeleteDeckModal}
+                    onClick={() => handleCloseDeleteDeckModal(index)}
                     variant="primary"
                   >
                     Cancel
@@ -63,7 +82,7 @@ const Decks = () => {
               </Stack>
             </Modal.Body>
           </Modal>
-        </>
+        </div>
       );
     });
   return (

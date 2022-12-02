@@ -51,14 +51,6 @@ const Learn = () => {
               <Form.Control onChange={handleOnSearchDeckChange} />
             </Form.Group>
           </Form>
-          {/* <Form onSubmit={handleOnSaveDecks}>
-            <Stack>
-              <Form.Label>Save decks:</Form.Label>
-              <Button variant="primary" type="submit">
-                &#10003;
-              </Button>
-            </Stack>
-          </Form> */}
         </section>
         <Decks />
       </section>
