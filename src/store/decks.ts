@@ -15,11 +15,6 @@ interface IDeck {
   id: string | undefined;
 }
 
-interface INewDeckAction {
-  type: string;
-  payload: string;
-}
-
 interface INewPhraseAction {
   type: string;
   payload: string;
@@ -250,7 +245,7 @@ const decksSlice = createSlice({
         return { ...deck, email: action.payload.email };
       });
       axios
-        .post('/home/save', [...decks], {
+        .put('/home/update', [...decks], {
           headers: {
             'Content-Type': 'application/json',
           },
